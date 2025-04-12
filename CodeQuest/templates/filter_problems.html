@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Filter Codeforces Problems</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background-color: #f5f5f5; }
+        input, button, select { padding: 8px; margin: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+        .solved { background-color: #d4edda; }
+        .unsolved { background-color: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>Codeforces Problem Filter</h1>
+    <form method="GET" action="{% url 'filter_page' %}">
+        <input type="text" name="rating" placeholder="Rating (e.g. 1500)" value="{{ request.GET.rating }}">
+        <input type="text" name="index" placeholder="Index (e.g. C)" value="{{ request.GET.index }}">
+        <input type="text" name="handle" placeholder="Handle (e.g. tourist)" value="{{ request.GET.handle }}">
+
+        <select name="division">
+            <option value="">-- Select Division --</option>
+            {% for div in divisions %}
+                <option value="{{ div }}" {% if request.GET.division == div %}selected{% endif %}>{{ div }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Search</button>
+    </form>
+
+    {% if problems %}
+        <h3>Showing {{ problems|length }} problems:</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Rating</th>
+                <th>Index</th>
+                <th>Status</th>
+                <th>Link</th>
+            </tr>
+            {% for prob in problems %}
+            <tr class="{{ prob.status }}">
+                <td>{{ prob.name }}</td>
+                <td>{{ prob.rating }}</td>
+                <td>{{ prob.index }}</td>
+                <td>{{ prob.status|title }}</td>
+                <td><a href="{{ prob.url }}" target="_blank">View</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>
