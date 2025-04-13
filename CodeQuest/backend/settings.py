@@ -21,10 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4@6v=s0l8s4pt9w$9z!g5ebku6bl4iuev16s-b7jgnr9zhl64y'
+# SECRET_KEY = 'django-insecure-4@6v=s0l8s4pt9w$9z!g5ebku6bl4iuev16s-b7jgnr9zhl64y'
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True 
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
 
 ALLOWED_HOSTS = ['codequest.onrender.com']
 
@@ -134,3 +138,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# '-85y3wsye04@ro13*$)_fl2i0)1zko52okckb$cw-)f(@w8)&s'
