@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 
-ALLOWED_HOSTS = ['codequest.onrender.com']
+ALLOWED_HOSTS = ['.onrender.com', 'localhost']
 
 
 # Application definition
