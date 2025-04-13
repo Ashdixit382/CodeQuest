@@ -15,17 +15,16 @@
 <body>
     <h1>Codeforces Problem Filter</h1>
     <form method="GET" action="{% url 'filter_page' %}">
-        <input type="text" name="rating" placeholder="Rating (e.g. 1500)" value="{{ request.GET.rating }}">
-        <input type="text" name="index" placeholder="Index (e.g. C)" value="{{ request.GET.index }}">
+        <input type="text" name="min_rating" placeholder="Min Rating (e.g. 1500)" value="{{ request.GET.min_rating }}">
+        <input type="text" name="max_rating" placeholder="Max Rating (e.g. 1800)" value="{{ request.GET.max_rating }}">
+        <input type="text" name="index" placeholder="Index (e.g. B)" value="{{ request.GET.index }}">
         <input type="text" name="handle" placeholder="Handle (e.g. tourist)" value="{{ request.GET.handle }}">
-
         <select name="division">
             <option value="">-- Select Division --</option>
             {% for div in divisions %}
                 <option value="{{ div }}" {% if request.GET.division == div %}selected{% endif %}>{{ div }}</option>
             {% endfor %}
         </select>
-
         <button type="submit">Search</button>
     </form>
 

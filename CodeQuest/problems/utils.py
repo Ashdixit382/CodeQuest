@@ -40,7 +40,7 @@ def fetch_and_store_codeforces_problems():
     data = response.json()
 
     if data["status"] != "OK":
-        return "❌ Failed to fetch problems."
+        return "Failed to fetch problems."
 
     problems = data["result"]["problems"]
     division_map = get_division_map()
