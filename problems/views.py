@@ -115,6 +115,10 @@ def filter_problems_page(request):
         response = requests.get('http://localhost:8000/api/filter-problems/', params=params)
         if response.status_code == 200:
             problems = response.json()
+    else:
+        response = requests.get('http://localhost:8000/api/filter-problems/')
+        if response.status_code == 200:
+            problems = response.json()        
 
     divisions = ["Div. 1", "Div. 2", "Div. 3", "Div. 4", "Educational", "Global"]
 
