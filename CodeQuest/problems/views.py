@@ -33,9 +33,11 @@ def filter_problems(request):
     index = request.query_params.get('index')
     handle = request.query_params.get('handle')
     division = request.query_params.get('division')
+    sort_by = request.query_params.get('sort_by')
 
     queryset = CodeforcesProblem.objects.all()
 
+    # Apply rating range filters
     if min_rating and max_rating:
         queryset = queryset.filter(rating__gte=min_rating, rating__lte=max_rating)
     elif min_rating:
@@ -43,9 +45,11 @@ def filter_problems(request):
     elif max_rating:
         queryset = queryset.filter(rating__lte=max_rating)
 
+    # Apply index filter
     if index:
         queryset = queryset.filter(index__startswith=index.upper())
 
+    # Apply division filter
     if division:
         queryset = queryset.filter(division=division)
 
@@ -59,6 +63,13 @@ def filter_problems(request):
             if user is None:
                 return Response({"error": "Invalid handle or fetch failed"}, status=400)
         solved_ids = set(user.solved_problems.values_list('id', flat=True))
+
+    # Apply sorting if required
+    if sort_by:
+        if sort_by == 'rating':
+            queryset = queryset.order_by('rating')
+        elif sort_by == 'index':
+            queryset = queryset.order_by('index')
 
     results = []
     for prob in queryset:
@@ -76,12 +87,14 @@ def filter_problems(request):
 
 
 
+
 def filter_problems_page(request):
     min_rating = request.GET.get('min_rating')
     max_rating = request.GET.get('max_rating')
     index = request.GET.get('index')
     handle = request.GET.get('handle')
     division = request.GET.get('division')
+    sort_by = request.GET.get('sort_by')
 
     params = {}
     if min_rating:
@@ -94,6 +107,8 @@ def filter_problems_page(request):
         params['handle'] = handle
     if division:
         params['division'] = division
+    if sort_by:
+        params['sort_by'] = sort_by
 
     problems = []
     if params:
