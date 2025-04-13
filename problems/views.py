@@ -112,11 +112,11 @@ def filter_problems_page(request):
 
     problems = []
     if params:
-        response = requests.get('http://localhost:8000/api/filter-problems/', params=params)
+        response = requests.get('http://localhost:8000/filter-problems/', params=params)
         if response.status_code == 200:
             problems = response.json()
     else:
-        response = requests.get('http://localhost:8000/api/filter-problems/')
+        response = requests.get('http://localhost:8000/filter-problems/')
         if response.status_code == 200:
             problems = response.json()        
 

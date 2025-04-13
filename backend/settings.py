@@ -31,6 +31,8 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 
 ALLOWED_HOSTS = ['.onrender.com', 'localhost']
+# ALLOWED_HOSTS = []
+
 
 
 # Application definition
