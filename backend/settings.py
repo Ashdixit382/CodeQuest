@@ -32,8 +32,8 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # ALLOWED_HOSTS = ['.onrender.com', 'localhost']
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",") 
-print("ALLOWED_HOSTS from env:", os.environ.get("ALLOWED_HOSTS"))
-print("Final ALLOWED_HOSTS list:", ALLOWED_HOSTS)
+# print("ALLOWED_HOSTS from env:", os.environ.get("ALLOWED_HOSTS"))
+# print("Final ALLOWED_HOSTS list:", ALLOWED_HOSTS)
 # ALLOWED_HOSTS = []
 
 

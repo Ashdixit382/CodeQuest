@@ -128,7 +128,7 @@ def filter_codeforces_problems(min_rating=None, max_rating=None, index=None, han
         except CodeforcesUser.DoesNotExist:
             user = fetch_user_solved_problems(handle)
             if user is None:
-                return None  # Or return an error response here
+                return queryset, set()  # ✅ Fix: safe fallback
         solved_ids = set(user.solved_problems.values_list('id', flat=True))
 
     # Apply sorting if required
@@ -139,3 +139,4 @@ def filter_codeforces_problems(min_rating=None, max_rating=None, index=None, han
             queryset = queryset.order_by('index')
 
     return queryset, solved_ids
+
