@@ -74,39 +74,6 @@ def fetch_and_store_codeforces_problems():
 
     return f"✅ {count} problems fetched and stored successfully."
 
-
-# def fetch_user_solved_problems(handle):
-#     url = f"https://codeforces.com/api/user.status?handle={handle}"
-#     response = requests.get(url)
-#     data = response.json()
-
-#     if data["status"] != "OK":
-#         return None
-
-#     solved_set = set()
-#     for submission in data["result"]:
-#         if submission.get("verdict") == "OK":
-#             problem = submission.get("problem", {})
-#             contest_id = problem.get("contestId")
-#             index = problem.get("index")
-
-#             # Skip if required fields are missing
-#             if contest_id is None or index is None:
-#                 continue
-
-#             key = (contest_id, index)
-#             solved_set.add(key)
-
-#     user, created = CodeforcesUser.objects.get_or_create(handle=handle)
-
-#     for contest_id, index in solved_set:
-#         try:
-#             prob = CodeforcesProblem.objects.get(contest_id=contest_id, index=index)
-#             user.solved_problems.add(prob)
-#         except CodeforcesProblem.DoesNotExist:
-#             continue  # skip if the problem isn't stored
-
-#     return user
 def fetch_user_solved_problems(handle):
     url = f"https://codeforces.com/api/user.status?handle={handle}"
     response = requests.get(url, timeout=10)  # timeout added
@@ -144,7 +111,9 @@ def fetch_user_solved_problems(handle):
 
 
 
-def filter_codeforces_problems(min_rating=None, max_rating=None, index=None, handle=None, division=None, sort_by=None):
+from django.core.paginator import Paginator
+
+def filter_codeforces_problems(min_rating=None, max_rating=None, index=None, handle=None, division=None, sort_by=None, page=1):
     queryset = CodeforcesProblem.objects.all()
 
     # Apply rating range filters
@@ -181,5 +150,10 @@ def filter_codeforces_problems(min_rating=None, max_rating=None, index=None, han
         elif sort_by == 'index':
             queryset = queryset.order_by('index')
 
-    return queryset, solved_ids
+    # Paginate the queryset
+    paginator = Paginator(queryset, 20)  # 20 problems per page
+    page_obj = paginator.get_page(page)
+
+    return page_obj, solved_ids
+
 

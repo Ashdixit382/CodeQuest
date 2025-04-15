@@ -4,42 +4,137 @@
     <meta charset="UTF-8">
     <title>Filter Codeforces Problems</title>
     <style>
-        body { font-family: Arial; padding: 20px; background-color: #f5f5f5; }
-        input, button, select { padding: 8px; margin: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
-        .solved { background-color: #d4edda; }
-        .unsolved { background-color: #f8d7da; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+
+        .owner-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+            font-size: 14px;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .owner-info a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        .owner-info a:hover {
+            text-decoration: underline;
+            color: #005582;
+        }
+
+        input, button, select {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .solved {
+            background-color: #d4edda;
+        }
+
+        .unsolved {
+            background-color: #f8d7da;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .pagination a {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <h1>Codeforces Problem Filter</h1>
+
+    {% comment %} <div class="owner-info">
+        <strong>Contribution By:</strong><br>
+        <a href="https://www.linkedin.com/in/ashish-dixit-link" target="_blank">Ashish </a><br>
+        <a href="https://www.linkedin.com/in/mushir-ali-link" target="_blank">Mushir</a><br>
+        <a href="https://www.linkedin.com/in/divyansh-sharma-link" target="_blank"> Divyansh </a>
+    </div> {% endcomment %}
+
+    <h1 style="text-align: center; color: #333;">CodeQuest</h1>
+    <blockquote style="font-style: italic; color: #333; margin-top: 10px; background-color: #e6f0ff; padding: 10px 15px; border-left: 5px solid #007bff; border-radius: 8px;">
+        “Do untill you achieve it.”
+    </blockquote>
+
     <form method="GET" action="{% url 'filter_page' %}">
         <input type="text" name="min_rating" placeholder="Min Rating (e.g. 1500)" value="{{ request.GET.min_rating }}">
         <input type="text" name="max_rating" placeholder="Max Rating (e.g. 1800)" value="{{ request.GET.max_rating }}">
         <input type="text" name="index" placeholder="Index (e.g. B)" value="{{ request.GET.index }}">
         <input type="text" name="handle" placeholder="Handle (e.g. tourist)" value="{{ request.GET.handle }}">
-        
+
         <select name="division">
             <option value="">-- Select Division --</option>
             {% for div in divisions %}
                 <option value="{{ div }}" {% if request.GET.division == div %}selected{% endif %}>{{ div }}</option>
             {% endfor %}
         </select>
-        
-        <!-- Sorting Options -->
+
         <select name="sort_by">
             <option value="">-- Sort By --</option>
             <option value="rating" {% if request.GET.sort_by == 'rating' %}selected{% endif %}>Rating</option>
             <option value="index" {% if request.GET.sort_by == 'index' %}selected{% endif %}>Index</option>
         </select>
-    
+
         <button type="submit">Search</button>
     </form>
-    
 
     {% if problems %}
-        <h3>Showing {{ problems|length }} problems:</h3>
+        <h3>Total Problems: {{ page_obj.paginator.count }}</h3>
         <table>
             <tr>
                 <th>Name</th>
@@ -58,6 +153,18 @@
             </tr>
             {% endfor %}
         </table>
+
+        {% if problems %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&min_rating={{ request.GET.min_rating }}&max_rating={{ request.GET.max_rating }}&index={{ request.GET.index }}&handle={{ request.GET.handle }}&division={{ request.GET.division }}&sort_by={{ request.GET.sort_by }}">Previous</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&min_rating={{ request.GET.min_rating }}&max_rating={{ request.GET.max_rating }}&index={{ request.GET.index }}&handle={{ request.GET.handle }}&division={{ request.GET.division }}&sort_by={{ request.GET.sort_by }}">Next</a>
+            {% endif %}
+        </div>
+        {% endif %}
     {% endif %}
 </body>
 </html>

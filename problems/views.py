@@ -53,6 +53,31 @@ def filter_problems(request):
 
     return Response(results)
 
+# def filter_problems_page(request):
+#     min_rating = request.GET.get('min_rating')
+#     max_rating = request.GET.get('max_rating')
+#     index = request.GET.get('index')
+#     handle = request.GET.get('handle')
+#     division = request.GET.get('division')
+#     sort_by = request.GET.get('sort_by')
+
+#     problems, solved_ids = filter_codeforces_problems(min_rating, max_rating, index, handle, division, sort_by)
+
+#     if problems is None:
+#         return render(request, 'filter_problems.html', {'error': 'Failed to fetch problems or invalid handle'})
+
+#     # ✅ Add status to each problem
+#     for prob in problems:
+#         prob.status = "solved" if prob.id in solved_ids else "unsolved"
+
+#     divisions = ["Div. 1", "Div. 2", "Div. 3", "Div. 4", "Educational", "Global"]
+#     return render(request, 'filter_problems.html', {
+#         'problems': problems,
+#         'request': request,
+#         'divisions': divisions,
+#     })
+
+
 def filter_problems_page(request):
     min_rating = request.GET.get('min_rating')
     max_rating = request.GET.get('max_rating')
@@ -60,21 +85,24 @@ def filter_problems_page(request):
     handle = request.GET.get('handle')
     division = request.GET.get('division')
     sort_by = request.GET.get('sort_by')
+    page = request.GET.get('page', 1)  # Default to page 1 if not provided
 
-    problems, solved_ids = filter_codeforces_problems(min_rating, max_rating, index, handle, division, sort_by)
+    problems_page, solved_ids = filter_codeforces_problems(min_rating, max_rating, index, handle, division, sort_by, page)
 
-    if problems is None:
+    if problems_page is None:
         return render(request, 'filter_problems.html', {'error': 'Failed to fetch problems or invalid handle'})
 
-    # ✅ Add status to each problem
-    for prob in problems:
+    # Add status to each problem
+    for prob in problems_page:
         prob.status = "solved" if prob.id in solved_ids else "unsolved"
 
     divisions = ["Div. 1", "Div. 2", "Div. 3", "Div. 4", "Educational", "Global"]
+    
     return render(request, 'filter_problems.html', {
-        'problems': problems,
+        'problems': problems_page,
         'request': request,
         'divisions': divisions,
+        'page_obj': problems_page,
     })
 
 
